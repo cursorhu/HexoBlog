@@ -1,0 +1,67 @@
+---
+title: Github仓库初始化配置
+date: 2020-08-27 10:57:00
+tags: Git
+categories: Git
+---
+
+## 1.安装git
+## 2.进入本地源码目录
+
+    git init
+
+会出现.git目录
+首次需要配置github账户和邮箱
+
+    git config --global user.name "github注册的用户名"
+    git config --global user.mail "github注册的邮箱"
+
+## 3.添加远程仓库
+在github网页新建仓库
+
+    git remote add origin git@github.com:github用户名/仓库名.git
+
+.git/config文件内容会出现remote等内容，ssh方式的url是git开头，http(s)方式是http(s)开头
+![image-20221205111653141](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202212051116187.png)
+如果是从别人拉过来的仓库，修改后新建仓库，上传遇到`fatal: remote origin already exists`问题，解决方法:
+
+    git remote rm origin
+    git remote add origin git@github.com:github用户名/仓库名.git
+
+## 4.git add, commit, push三连
+
+    git add -A
+    git commit -m 'first commit'
+    git push -f --set-upstream origin master //首次提交
+
+![image-20221205111703940](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202212051117987.png)
+完成以后远程可以看得到仓库的文件   
+
+## 5.创建分支
+如果已经有主线，在本地`git checkout branchname`, 远程创建分支，记录.git链接， 然后关联远程分支即可：
+
+    git remote add origin https://github.com/*/*.git
+
+然后推送
+
+    git push origin branchname
+
+## 5.首次配置可能的问题：
+push时有RSA key错误
+![image-20221205111713234](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202212051117281.png)
+因为Git使用SSH连接，而SSH第一次连接需要验证GitHub服务器的Key。确认GitHub的Key的指纹信息是否真的来自GitHub的服务器。解决办法是在本地生成key，配置到github服务器
+（1)创建ssh key
+
+    ls -al ~/.ssh
+    ssh-keygen -t rsa -C "github用户名"
+    cat ~/.ssh/id_rsa.pub
+![image-20221205111721197](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202212051117255.png)
+在push三连过程可以设置global全局配置，以后默认push到github
+![image-20221205111728996](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202212051117055.png)
+
+（2）配置ssh key到github
+登陆github,头像-settings-new SSH,复制新生成的SSH配置到服务器
+![image-20221205111737339](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202212051117386.png)
+（3）需要重新add origin新建仓库（或者网页上新建仓库)，再push，`git status`和`git log`查看分支和日志
+
+​    
