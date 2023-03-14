@@ -173,7 +173,7 @@ sudo insmod /lib/modules/`uname -r`/build/drivers/mmc/host/sdhci.ko
 sudo insmod /lib/modules/`uname -r`/build/drivers/mmc/host/sdhci-uhs2.ko
 sudo insmod /lib/modules/`uname -r`/build/drivers/mmc/host/sdhci-pci.ko 
 ```
- 
+
 ## 3. 调试过程
 ### 3.1 调试工具
 1. printk
@@ -232,14 +232,14 @@ sudo apt install code
 	static inline void *sdhci_priv(struct sdhci_host *host){
     return host->private;
     }
-
+   
    ```
    而host->private实际指向sdhci_host结构体的最后定义的如下0长度数组
    ```
    unsigned long private[] ____cacheline_aligned;
    ```
-参考：[# [Explanation on private variable in c struct](https://stackoverflow.com/questions/17931491/explanation-on-private-variable-in-c-struct)](https://stackoverflow.com/questions/17931491/explanation-on-private-variable-in-c-struct)
-基本含义是可以获取结构体外部的数据，而host指针本身确实属于slot结构体sdhci_pci_slot的一部分，所以host->private能访问到slot。
+   参考：[# [Explanation on private variable in c struct](https://stackoverflow.com/questions/17931491/explanation-on-private-variable-in-c-struct)](https://stackoverflow.com/questions/17931491/explanation-on-private-variable-in-c-struct)
+   基本含义是可以获取结构体外部的数据，而host指针本身确实属于slot结构体sdhci_pci_slot的一部分，所以host->private能访问到slot。
 
 3. 贴一段dmesg log，包含UHSII初始化过程直到最后一步GO_DORMANT fail
 具体流程参考UHSII spec:  SD_Specifications_Part_1_UHS_II_Addendum

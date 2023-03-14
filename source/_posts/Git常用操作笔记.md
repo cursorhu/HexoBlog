@@ -54,9 +54,13 @@ categories: Git
 
 ## 版本比较
 
+可以用`git diff --help`直接查看git diff的Manual Page
+
     git diff COMMIT_ID //比较本地和某commit_id的内容
     git diff ID1 ID2 //比较两个提交的内容，比较新增时，旧版本在前，新版本在后
-    git diff --name-only ID1 ID2 //只显示文件名
+    git diff <path of file> //比较本地某文件的内容
+    git diff --name-only ID1 ID2 //只显示有差异的文件名列表
+    git diff <commit>..<commit> [<path>…​] //比较两个提交中指定文件名或者路径的差异
 
 ## 版本回退
 
@@ -390,7 +394,7 @@ git commit -m "commit信息"
 git remote add origin http://远程仓库地址.git
 ```
 
-3.拉取远程仓库到本地
+3.拉取远程仓库到本地 (如果远程仓库为空不需要此步)
 
 注意`--allow-unrelated-histories`是忽略本地项目和远程项目没有历史关联的关键参数，否则不能pull成功
 

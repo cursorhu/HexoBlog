@@ -56,4 +56,14 @@ VSCode会将每个工作区的一些配置、扩展、缓存等默认保存在C�
 取消注释：shift + alt + a
 ```
 
+## 更改快捷键
+
+File->Preference->KeyboardShortCuts
+
+例如可以把块注释/**/快捷键改成`ctrl+Alt+/`，和行注释`ctrl+/`达成统一：
+
+选择recording keys，直接录入要修改的快捷键
+
+![image-20230220110133891](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202302201101988.png)
+
 # 插件配置
