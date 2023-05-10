@@ -62,3 +62,9 @@ Word默认图片如果直接复制出来，不是原图是压缩后的图。
 2. 可以按文字或者颜色筛选
 
    ![image-20230209114508910](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202302091145967.png)
+
+## 冻结首行
+
+筛选行一般需要固定显示，因此设置冻结首行：
+
+选中要固定显示行的下一行, 视图 -> 冻结窗格 -> 冻结首行

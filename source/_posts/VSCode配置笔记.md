@@ -1,10 +1,8 @@
 ---
-
 title: VSCode配置笔记
 date: 2022-12-08 11:50:24
 tags: vscode
 categories: vscode
-
 ---
 
 # 基本配置

@@ -41,14 +41,13 @@ sudo smbpasswd -a $USER
 systemctl status smbd
 
 #share the folder in ubuntu GUI checkbox
+右键要共享的home文件夹properties -> local Network Share -> share this folder ->share name不能直接用用户名，可以用'用户名+Home'
 ```
 
-Ubuntu 22.10版本，没有右键共享文件的选项，需要[Install the nautilus-share](https://fostips.com/share-folder-ubuntu-21-04-fix-net-share-error-255/#:~:text=How%20to%20Share%20A%20Folder%20over%20Local%20Network,4%204.%20How%20to%20access%20the%20shared%20folder)；如果非root用户要共享/home，需要修改smb.conf:
+显示无权共享：非root用户要共享/home，需要修改smb.conf:
 
 ```
-sudo apt install nautilus-share
-reboot后,右键要共享的home文件夹，选中Sharing Options，显示无权共享
-vim /etc/samba/smb.conf
+sudo vim /etc/samba/smb.conf
 在[global]新增usershare owner only = false
 sudo systemctl restart smbd
 ```
@@ -61,11 +60,23 @@ windows下可以在文件浏览器直接访问Linux主机ip查看共享的Linux�
 
 ![image-20230130110305978](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202301301103020.png)
 
-如果windows访问共享目录有权限问题（例如不能写入），需要在Linux修改共享目录的权限：
+首次windows访问共享目录有权限问题（不能写入），需要在Linux修改共享目录/home的权限：
 
 ```
-sudo chmod 777 共享目录 -R 
+sudo chmod 777 /home -R 
 ```
+
+为了以后方便连接，可以创建网络位置，参考：[6. Access the shared folder On Windows 11 or 10](www.how2shout.com/linux/how-to-install-samba-on-ubuntu-22-04-lts-jammy-linux)
+
+如果一个主机有两个samba共享目录，windows不允许多重连接；
+
+要更改连接目录，操作如下：
+
+win10系统在搜索框搜索【凭据管理器】，然后删除已有的windows samba网络连接凭据
+
+`win+R` CMD输入 `net use * /del /y`断开所有远程链接，包括samba网络连接
+
+重新配置windows samba网络连接
 
 ## 重装Samba
 

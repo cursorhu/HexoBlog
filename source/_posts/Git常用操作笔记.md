@@ -441,3 +441,165 @@ git clone --recursive "项目地址.git"
 ```
 git submodule update --init --recursive
 ```
+
+# Git的常用配置
+
+## 配置多组用户信息
+
+git上传代码时会提交用户信息，包括姓名和邮箱，这个配置是本地的git配置文件决定。
+
+如果要按项目配置多组用户信息，例如公司的代码以公司邮箱提交到公司内部的gitlab，个人项目的代码以个人邮箱提交到github，如何配置？
+
+下面分别介绍全局配置、按项目配置和按文件目录配置三种git配置方法。
+
+（1）git配置文件的位置
+
+git配置文件为.gitconfig。对于windows, 一般在’C:\Users\用户名‘目录下，可以用everything查找.gitconfig，对于Linux, 一般在home目录。本文以windows为例。
+
+（2）全局配置
+
+.gitconfig里面默认的user字段就是全局的配置，首次使用git提交会提示用户输入此信息。
+
+```
+[user]
+    name = youName
+    email = youEmail@example.com
+```
+
+全局配置的查看和修改使用`--global`：
+
+```
+git config --global user.name                           // 查询全局用户名
+git config --global user.name youName                   // 修改全局用户名
+git config --global user.email                          // 查询全局邮箱
+git config --global user.email youEmail@example.com     // 修改全局邮箱
+```
+
+（3）对某个git项目自定义配置
+
+这种方法的作用域只是某一个git项目，用的比较少
+
+```
+git config user.name                           // 查询项目用户名
+git config user.name youName                   // 修改项目用户名
+git config user.email                          // 查询项目邮箱
+git config user.email youEmail@example.com     // 修改项目邮箱
+```
+
+（3）对某个路径下的所有git项目自定义配置
+
+git的`Conditional Includes`可以针对文件夹配置，在.gitconfig添加如下格式的includeIf字段
+
+```
+[includeIf "gitdir:path/to/you/gitdir/"]
+    path = ~/.gitconfig_self
+```
+
+其中path/to/you/gitdir/是要自定义配置的路径，可以包含很多git项目。注意尾部必须要加/
+
+.gitconfig_self是自定义配置的gitconfig文件，在里面指定[user]字段
+
+例如我的自定义路径是F:/github-my， 自定义配置文件.gitconfig_mygithub，配置如下：
+
+```
+[includeIf "gitdir:F:/github-my/"]
+    path = C:/Users/thomas.hu/.gitconfig_mygithub
+```
+
+注意windows上不能直接右键创建只有后缀名的文件，会提示“必须键入文件名”。
+
+使用CMD或Powershell的命令行创建.gitconfig_mygithub：
+
+```
+cd C:\Users\thomas.hu
+echo > .gitconfig_mygithub
+```
+
+.gitconfig_mygithub定义我个人项目的信息，内容如下：
+
+```
+[user]
+    name = cursorhu
+    email = 2449055512@qq.com
+```
+
+全局的.gitconfig是公司项目信息，内容如下：
+
+```
+[user]
+	name = thomas.hu
+	email = thomas.hu@xxx.com
+```
+
+配置.gitconfig_mygithub完成后可见两种配置都生效：
+
+```
+> git config --global user.name
+thomas.hu
+> git config user.name
+cursorhu
+```
+
+（4）三种配置文件的优先级
+
+git使用以上三种配置的优先级为：项目配置 > 路径配置 > 全局配置
+
+## 换行符的配置
+
+为了解决跨平台的文件换行符问题，git支持自定义配置换行符规则。
+
+（1）跨平台的文件换行符的相关背景
+
+在各操作系统下，文本文件所使用的换行符是不一样的。UNIX/Linux 使用的是 0x0A（LF），早期的 Mac OS 使用的是 0x0D（CR），后来的 OS X 版本与 UNIX 保持一致了。但 DOS/Windows 使用 0x0D0A（CRLF）作为换行符。也就是说，在不同平台上写代码，其代码文件和一些项目配置文件的换行不一样。
+
+（2）Git工具的autocrlf 
+
+Git最开始只支持类Unix的LF换行符，为了支持Windows开发的CRLF换行，Git提供了autocrlf 配置字段autocrlf 。
+
+如果autocrlf enable, Windows 本地的CRLF文件在提交到git时，自动转换为LF换行；从git checkout文件到windows本地时，git将LF换行自动替换为 Windows 的换行符（CRLF）。Linux环境下checkout时文件换行也自动转换为Linux的LF格式。
+
+如果autocrlf disable, Windows 本地的CRLF文件在提交到git时仍然为CRLF换行，如果有其他Linux环境的开发者checkout文件，可能无法在Linux上识别相关的CRLF文件引起项目编译问题。
+
+如果没有跨平台的开发环境，即所有开发者都是Windows或都是Linux环境，则不需要autocrlf enable。
+
+注意：对于windows版本的git, 默认是enable autocrlf，.gitconfig内容如下：
+
+```
+[core]
+	autocrlf = true
+```
+
+可以使用命令修改：
+
+```
+git config --global core.autocrlf false
+```
+
+（3）同一个项目内，要同时支持LF和CRLF如何设置？
+
+如果是临时的解决某些文件的换行问题，可以手动转换：
+
+```
+dos2unix #转换dos换行符为unix换行
+unix2dos #转换unix换行符为dos换行
+```
+
+对git项目的配置，参考[.gitattributes](https://git-scm.com/docs/gitattributes)，可以指定某路径的某文件使用指定的换行：
+
+```
+*           text=auto		#set autocrlf manually for all files
+*.vcproj	text eol=crlf 	#all .vcproj files have CRLF
+*.sh		text eol=lf 	#all .sh files have LF
+*.jpg		-text 			#prevent .jpg files from being normalized
+```
+
+eol attribute sets a specific line-ending style to be used in the working directory. This attribute has effect only if the `text` attribute is set or unspecified
+
+一个项目既有windows的bat脚本又有Linux的sh脚本，在全局的core.autocrlf 为true的基础上，配置如下attribute 使这些文件不自动转换：
+
+```
+*.bat	text eol=crlf
+*.sh	text eol=lf
+*/*.cfg	text eol=crlf
+```
+

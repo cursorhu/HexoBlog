@@ -1,5 +1,5 @@
 ---
-title: 如何参与Linux内核驱动开发
+title: 如何向Linux内核驱动提交和使用patch
 date: 2023-03-09 15:19:37
 tags: linux
 categories: linux
@@ -112,7 +112,7 @@ Kind regards
 Uffe
 ```
 
-2. Genesys的Ben Chuang, Jason Lai, Victor.shih 和linaro 的akashi 在Intel的UHS-II patch上不断提交修改后的UHS-II patch（V3~V6）跟随着Kernel版本不断演化，例如以下[V6 patch的第6/24提交](https://patchwork.kernel.org/project/linux-mmc/patch/20221213090047.3805-7-victor.shih@genesyslogic.com.tw/)的内容和修改意见：
+2. Genesys的Ben Chuang, Jason Lai, Victor.shih 和linaro 的akashi 在Intel的UHS-II patch上不断提交修改后的UHS-II patch（V3~V6）跟随着Kernel版本不断演化，此patch完整内容可在GitLab查看 [linux-uhs2-gl9755](https://gitlab.com/ben.chuang/linux-uhs2-gl9755)，在patchwork也可以查看commit内容和review意见：[V6 patch的第6/24提交](https://patchwork.kernel.org/project/linux-mmc/patch/20221213090047.3805-7-victor.shih@genesyslogic.com.tw/)：
 
 ```
 [V6,06/24] mmc: core: Support UHS-II card control and access

@@ -1,11 +1,14 @@
 ---
-title: Github仓库初始化配置
+title: Github常用配置笔记
 date: 2020-08-27 10:57:00
 tags: Git
 categories: Git
 ---
 
+# 初始化git和github仓库
+
 ## 1.安装git
+
 ## 2.进入本地源码目录
 
     git init
@@ -64,4 +67,25 @@ push时有RSA key错误
 ![image-20221205111737339](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202212051117386.png)
 （3）需要重新add origin新建仓库（或者网页上新建仓库)，再push，`git status`和`git log`查看分支和日志
 
-​    
+# Github clone使用国内镜像
+
+国内搞开发最痛苦的就是限速+断开连接，github clone经常失败。推荐国内镜像服务作为代理进行git clone，将原git地址的github.com替换成代理地址即可。参考 [无需代理直接加速各种 GitHub 资源拉取](https://zhuanlan.zhihu.com/p/463954956)
+
+```
+#git clone原地址
+$ git clone https://github.com/kubernetes/kubernetes.git
+
+#手动配置代理地址，任选其一能clone成功即可
+$ git clone https://github.com.cnpmjs.org/kubernetes/kubernetes.git
+$ git clone https://hub.fastgit.org/kubernetes/kubernetes.git
+$ git clone https://gitclone.com/github.com/kubernetes/kubernetes.git
+
+#配置git自动使用代理，配置以后可以用git clone原地址，自动走代理
+git config --global url."https://hub.fastgit.org".insteadOf https://github.com
+#取消自动代理
+$ git config --global --unset url.https://github.com/.insteadof
+```
+
+使用国内镜像并不一定能解决所有clone问题，有的recursive clone对依赖包有版本要求，国内镜像版本不匹配导致clone fail，此时不能使用国内镜像。
+
+解决版本：下载release版本的zip包，绕开git clone操作。
