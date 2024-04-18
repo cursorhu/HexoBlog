@@ -56,12 +56,14 @@ PicGo支持log调试，参考：
 [[PicGo上传图片到GitHub总是失败的特殊解决办法](https://www.shopee6.com/web/web-tutorial/picgo-github-fail.html)](https://www.shopee6.com/web/web-tutorial/picgo-github-fail.html)
 
 2022/5/17更新：
-最近发现jsdelivr在大陆挂了，那么只能放弃使用CDN, 直接使用github图床的raw链接
+最近发现jsdelivr在大陆挂了，那么只能放弃使用CDN, 直接使用github图床的raw链接.
 
 将Picgo默认图床路径从jsdelivr的
 https://cdn.jsdelivr.net/gh/账户名/图床仓库名@master
 改为：
 https://raw.githubusercontent.com/账户名/图床仓库名/master
+
+注意master前是@还是反斜杠 ''/''.
 
 对于已发布的博客的图床链接，直接用VSCode全局查找替换以上前缀即可，后面的图片id是不变的。
 
@@ -118,6 +120,12 @@ Obsidian默认快捷键不完整，需要补全优化
 
 标题大纲是侧边栏显示文章标题列表，就像word的导航窗口一样。在设置-核心插件开启。
 ![](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202202281104255.png)
+
+### 1.4 typora设置自动上传
+
+![](https://cdn.jsdelivr.net/gh/cursorhu/blog-images-on-picgo@master/images/202404181658086.png)
+
+
 
 ## 2. 搭建hexo博客发布环境
 ### 2.1 环境安装
@@ -230,7 +238,7 @@ Next配置可以自定义各种设置，例如子主题:
 
 hexo要使用next, 在hexo配置文件设置:
 > theme: next
-  
+
 hexo clean, hexo g, hexo s 跑本地服务，看一下效果：
 ![](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202203041651883.png)
 

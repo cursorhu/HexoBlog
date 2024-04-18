@@ -18,7 +18,7 @@ Samba通常的使用场景：在同一局域网内的的Linux主机安装Samba�
 
 Ubuntu 20.04和22.04 版本，安装Samba服务参考：
 
-[www.how2shout.com/linux/how-to-install-samba-on-ubuntu-22-04-lts-jammy-linux](https://www.how2shout.com/linux/how-to-install-samba-on-ubuntu-22-04-lts-jammy-linux/#:~:text=Steps%20to%20install%20SAMBA%20on%20Ubuntu%2022.04%20LTS,...%206%206.%20Access%20the%20shared%20folder%20)
+[www.how2shout.com/linux/how-to-install-samba-on-ubuntu-22-04-lts-jammy-linux](https://linux.how2shout.com/how-to-install-samba-on-ubuntu-22-04-lts-jammy-linux/#:~:text=Steps%20to%20install%20SAMBA%20on%20Ubuntu%2022.04%20LTS,...%206%206.%20Access%20the%20shared%20folder%20)
 主要流程：
 
 ```

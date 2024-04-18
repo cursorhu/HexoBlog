@@ -15,7 +15,11 @@ categories: xv6
 
 为什么选用x86版本：
 
-x86版本有更完善的资料和更细节的代码讲解，参考：[xv6-annotated](https://github.com/palladian1/xv6-annotated)
+x86版本有更完善的资料和更细节的代码讲解，参考：
+
+[xv6-annotated](https://github.com/palladian1/xv6-annotated)
+
+[woai3c/MIT6.828](https://github.com/woai3c/MIT6.828)
 
 学完x86版本再学riscv版本，只需要关注指令集差异即可
 
@@ -214,13 +218,31 @@ qga/commands-posix.c:633:13: error: In the GNU C Library, "major" is defined
  by <sys/sysmacros.h>.
 ```
 
+## 运行xv6
+
 下载6.828的jos lab，make产生kernel.img
 
 ```
 git clone https://pdos.csail.mit.edu/6.828/2018/jos.git lab
 ```
 
-make qemu执行qemu，内容如下表示qemu环境搭建OK
+运行qemu的xv6之前，需要export PATH和LD_LIBRARY_PATH；运行之后要清掉LD_LIBRARY_PATH为空(重启或手动清除)
+
+写export_xv6.sh如下:
+
+```
+export PFX=~/xv6/toolchain
+export PATH=$PFX/bin:$PATH
+export LD_LIBRARY_PATH=$PFX/lib:$LD_LIBRARY_PATH
+```
+
+建议给调用export_xv6.sh的命令加别名(alias)到.bashrc，可以用get-xv6命令一键export：
+
+```
+alias get_xv6='. $HOME/xv6/export_xv6.sh'
+```
+
+如果是本地执行qemu(带GUI)用`make qemu`; 如果是远程终端执行用`make qemu-nox`。qemu内容如下表示qemu环境搭建OK
 
 ```
 sed "s/localhost:1234/localhost:26000/" < .gdbinit.tmpl > .gdbinit

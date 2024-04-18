@@ -1,5 +1,5 @@
 ---
-title: Linux MMC框架下的UHS-II驱动调试
+title: Linux MMC/SD driver分析与调试记录
 date: 2022-03-25 11:21:00
 tags: linux
 categories: linux
@@ -56,12 +56,19 @@ host层对于上述三种SD模式的支持：
 注意：一定要在Linux环境下解压待编译源码，不能在windows下解压再拷到Linux编译，因为源码中有些大小写不同的同名文件，例如net/netfilter的很多头文件。windows不区分大小，解压时写会让你替换或重命名，这些同名文件的内容不一样，所以不能替换或重命名，强行替换会导致编译Linux报错找不到相关文件。
 
 1. 编译环境准备
-gcc/make等工具，都需要先安装build-essential才能使用
+gcc/make等工具，都需要先安装build-essential等工具才能使用
 ```
-sudo apt-get install build-essential libncurses-dev bison flex libssl-dev libelf-dev
+sudo apt install build-essential libncurses-dev bison flex libssl-dev libelf-dev
 ```
 
+- 遇到的问题:
+
+apt如果有依赖问题，建议apt手动安装，如果要特定版本，例如指定依赖libc6库版本为2.35-0ubuntu3，使用`apt install libc6=2.35-0ubuntu3`, 可以用apt policy libc6查看。
+
+这里不建议sudo apt install aptitude（使用aptitude自动安装需要的依赖库版本），因为会导致make menuconfig出现<sys/types.h>找不到的问题，这个问题的原因是libc6-dev未安装，必须用apt安装libc6-dev解决此问题。
+
 2. 配置，编译和安装 
+
 ```
 cd linux-uhs2-gl9755-v3-patch #进入待编译Kernel源码
 make menuconfig #配置内核，生成.config文件
@@ -73,7 +80,11 @@ make install #安装内核(包括更新模块信息)
 
 也可以设置默认启动的kernel，编辑/etc/default/grub的`GRUB_DEFAULT="1>X"`, 其中1表示从advanced选项启动，X表示从哪个kernel启动(0 based)，例如下图如果默认要从5.19启动，X设置为0，默认从5.8.0-rc4启动，X设置为6.
 ![](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202208171414943.png)
-配置完毕update-grub重启生效
+配置完毕必须要update-grub重启生效
+
+- 遇到的问题
+
+  make有canonical-certs.pem证书问题：修改.config，取消证书要求：CONFIG_SYSTEM_TRUSTED_KEYS=""，CONFIG_SYSTEM_REVOCATION_KEYS=""
 
 3.  查看内核版本
 ```
@@ -98,7 +109,7 @@ Try to disable CONFIG_DEBUG_INFO_BTF
 ```
 修改Kernel源码根目录的.config文件，CONFIG_DEBUG_INFO_BTF=n 关闭此选项
 
-(2) 编译完成，但运行新kernel时报错`out of memory`
+​      (2) 编译完成，但运行新kernel时报错`out of memory`
 解决办法：裁剪module大小，编译模块时使用 `make  INSTALL_MOD_STRIP=1 modules_install`，.ko被编译时会缩减非必要的debug信息。
 
 ### 2.2 合并UHSII patch后再编译整个Kernel

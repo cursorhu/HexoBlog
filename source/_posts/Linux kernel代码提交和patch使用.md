@@ -1,5 +1,5 @@
 ---
-title: 如何向Linux内核驱动提交和使用patch
+title: Linux kernel代码提交和patch使用
 date: 2023-03-09 15:19:37
 tags: linux
 categories: linux
@@ -42,7 +42,7 @@ Patch是提交到kernel之前的一个阶段，由kernel subsystem maintainer re
 
   [Linux下生成patch和打patch](https://blog.csdn.net/dl0914791011/article/details/17299103)
 
-## Linux MMC子系统中UHS-II Patch的演化过程
+## 示例：Linux MMC子系统中UHS-II Patch的演化过程
 
 ### Linux MMC子系统的现状
 
@@ -221,6 +221,8 @@ means the interpretation of the flag becomes inverted.
 
 ## 详解Patch的使用
 
+Kernel document: [Applying Patches To The Linux Kernel](https://www.kernel.org/doc/html/latest/process/applying-patches.html#:~:text=A%20patch%20is%20a%20small%20text%20document%20containing,the%20patch%20will%20change%20the%20source%20tree%20into.)
+
 ### Patch与git diff
 
 Patch文件的内容实际是`git diff`命令的输出，git diff的输出定义为.diff文件或.patch文件，即可作为patch使用。打patch实际上就是按diff规则，解析diff/patch文件，去改变本地的代码树和内容。
@@ -261,7 +263,13 @@ index 31153f6..5501895 100644
  #endif
 ```
 
-一般提交给Kernel社区的patch需要按功能和文件拆分成多个patch提交，也就是说应该对某个文件或者路径git diff, 而不建议直接对所有文件git diff。例如以上示例可以分为两个diff：
+如果是已经git commit的两个版本之间的diff, 可直接产生所有修改内容的diff文件:
+
+```
+git diff commit-a commit-b
+```
+
+一般提交给Kernel社区的patch需要按功能和文件拆分成多个patch提交，也就是说应该对某个文件或者路径git diff, 而不建议直接对版本所有文件git diff。例如以上patch可以分为两个diff，内容等价于：
 
 ```
 git diff drivers/mmc/core/block.c
@@ -289,7 +297,15 @@ git diff drivers/mmc/core/block.h
 
 ![image-20230309194559245](https://raw.githubusercontent.com/cursorhu/blog-images-on-picgo/master/images/202303091945285.png)
 
-Patch命令一般使用以上的diff文件，例如：
+Patch命令使用以上的.diff文件，有的也命名为.patch文件
+
+```
+patch -p1 < xxx.diff
+```
+
+-p 表示path：跳过第几级目录；1 表示忽略第一级目录
+
+例如diff如下时，第一级目录用a, b表示，patch -p1将忽略a, b，将drivers/mmc/xxx的diff内容打patch到当前：
 
 ```
 diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c

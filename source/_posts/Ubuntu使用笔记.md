@@ -1,6 +1,6 @@
 ---
-title: ubuntu使用笔记
-date: 2023-04-28 11:08:09
+title: Ubuntu使用笔记
+date: 2023-04-26 11:08:09
 tags: ubuntu
 categories: linux
 ---
@@ -104,7 +104,7 @@ setting -> keyboard -> shortcuts -> custom shortcut -> 为应用程序添加快�
 
 要配置其他flameshot命令的快捷键，用 `man flameshot` 查看，参考 [Keyboard shortcuts for Flameshot](https://flameshot.org/docs/guide/key-bindings/)
 
-## Timeshift系统备份
+## Timeshift备份系统
 
 22.04系统似乎比较容易挂，进不了系统显示"Oh no... system can't recover..."，比如：
 
@@ -142,7 +142,19 @@ sudo apt install timeshift
 
 情景三：磁盘中的snapshot数据损害：只能重装系统，为了避免此情况发生，应该将系统备份到其他硬盘而不仅仅在当前系统盘
 
-## 关于系统损坏
+## Clonezilla克隆系统
+
+类似windows ghost的整盘克隆：
+
+https://www.linuxbabe.com/backup/how-to-use-clonezilla-live
+
+至少需要三个盘：
+
+在U盘写入Clonezilla的live usb iso生成Clonezilla live USB，再以Clonezilla live USB启动，对待备份的SSD盘做系统备份，到另一个SSD或者大USB盘；
+
+恢复也是需要Clonezilla live USB + 有系统备份的盘 + 目标写入盘
+
+## 关于系统目录
 
 /usr：系统级的目录，可以理解为C:/Windows/，apt安装的一般在/usr/bin和/usr/lib
 
@@ -153,3 +165,18 @@ sudo apt install timeshift
 /opt是用户级的目录用来安装大型的第三方附加软件包，可以理解为D:/Software
 
 开发过程中为了避免lib冲突，自己编译的包建议放在/home/<具体的项目目录>，此外注意自己编译基础库设置的LD_LIBRARY_PATH造成系统库链接冲突
+
+## Tmux
+
+参考：[Tmux 使用教程](https://www.ruanyifeng.com/blog/2019/10/tmux.html)
+
+## VNC远程桌面
+
+Ubuntu安装vino作为VNC server, windows端使用VNC Viewer作为client.
+
+```
+apt install vino
+setting -> Sharing -> Remote Desktop -> On
+```
+
+参考 [Ubuntu 22.04 Remote Desktop Access with Vino](https://www.answertopia.com/ubuntu/ubuntu-remote-desktop-access-with-vino/)

@@ -314,16 +314,16 @@ SHBrowseForFolder是win32 API，专用于打开目录
 ​    	}
 ​    	BOOL res = ff.FindFile(SRCDir);
 ​    
-    	while (res)
-    	{
-    		res = ff.FindNextFile();
-    		if (!ff.IsDirectory() && !ff.IsDots())
-    		{
-    			CString DSTFildPath;
-    			CString SRCFilePath = ff.GetFilePath();
-    			DSTFildPath = DSTDir + ff.GetFileName();
-    			copyFileResult = CopyFile(ff.GetFilePath(), DSTFildPath, FALSE);
-    
+​    	while (res)
+​    	{
+​    		res = ff.FindNextFile();
+​    		if (!ff.IsDirectory() && !ff.IsDots())
+​    		{
+​    			CString DSTFildPath;
+​    			CString SRCFilePath = ff.GetFilePath();
+​    			DSTFildPath = DSTDir + ff.GetFileName();
+​    			copyFileResult = CopyFile(ff.GetFilePath(), DSTFildPath, FALSE);
+​    
     			Sleep(2000);
     
     			if (copyFileResult == 0)

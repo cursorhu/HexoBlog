@@ -60,7 +60,7 @@ categories: Git
     git diff ID1 ID2 //比较两个提交的内容，比较新增时，旧版本在前，新版本在后
     git diff <path of file> //比较本地某文件的内容
     git diff --name-only ID1 ID2 //只显示有差异的文件名列表
-    git diff <commit>..<commit> [<path>…​] //比较两个提交中指定文件名或者路径的差异
+    git diff <commit>..<commit> [<path>…] //比较两个提交中指定文件名或者路径的差异
 
 ## 版本回退
 
@@ -603,3 +603,37 @@ eol attribute sets a specific line-ending style to be used in the working direct
 */*.cfg	text eol=crlf
 ```
 
+# 合并时有二进制文件冲突如何处理
+
+Git merge产生冲突：对于文本文件的冲突有强制处理要求，不解决完冲突无法提交；而对二进制文件的冲突只有提醒，没有强制处理要求。
+
+对于文本文件，提交者可以直接修改冲突的内容；而对于二进制文件，提交者不能直接修改二进制冲突的内容，很容易漏过对二进制文件冲突的处理。
+
+二进制文件冲突，git处理不了内容，应该使用覆盖的方式处理。手动覆盖可以解决此问题，但更合理的方法是用git命令自动解决。
+
+git命令方法：在冲突发生后，使用命令`git checkout --ours|--theirs <Paths>`来选择是使用“Ours，即当前分支”的二进制文件，还是“Theirs，即合并进来的分支”的二进制文件直接替换掉本地的冲突二进制文件，其中`<Paths>`是冲突二进制文件的路径。
+
+示例如下：
+
+本地版本为branch-A，要合并进来branch-B
+
+```
+git merge branch-B --squash
+```
+
+项目中的exe文件产生的冲突：
+
+```
+warning: Cannot merge binary files: fw_parameter_edit_tool/flash_header_parameter_update_tool.exe (HEAD vs. branch-B)
+Auto-merging fw_parameter_edit_tool/flash_header_parameter_update_tool.exe
+CONFLICT (content): Merge conflict in fw_parameter_edit_tool/flash_header_parameter_update_tool.exe
+```
+
+此时使用checkout --theirs将branch-B版本的二进制覆盖掉本地branch-A版本的二进制。即完成了此exe的合并（使用branch-B版本）
+
+```
+> git checkout --theirs fw_parameter_edit_tool/flash_header_parameter_update_tool.exe
+Updated 1 path from the index
+```
+
+合并完以后用beyond compare确认一下两个版本的exe是完全一致的，也可以用git diff看一下合并前后二进制文件是否有差异。
